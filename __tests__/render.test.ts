@@ -1,3 +1,4 @@
+// @ts-nocheck
 import App from '../src/app';
 import { Category, Order } from '../src/constants/enum';
 import '@testing-library/jest-dom';
