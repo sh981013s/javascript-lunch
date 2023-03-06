@@ -4,9 +4,14 @@ import ListContainer from './components/ListContainer';
 import TopNavBar from './components/TopNavBar';
 import { Category, Order } from './constants/enum';
 import Component from './core/Component';
+import { IComponentPropState } from './interfaces/IComponent';
 import IRestaurantInput from './interfaces/IRestaurantInput';
+import {
+  getLocalStorageItems,
+  setLocalStorageItem,
+} from './utils/localStroageUtils';
 import sortItemsByName from './utils/sortByName';
-import { IComponentPropState } from '@res/interfaces/IComponent';
+import defaultDummyRestaurantsData from './constants/defaultDummyRestaurantsData';
 
 class App extends Component<IComponentPropState> {
   setup() {
@@ -80,10 +85,14 @@ class App extends Component<IComponentPropState> {
   }
 
   addRestaurant(restaurantInput: IRestaurantInput) {
-    const restaurantList: IRestaurantInput[] = this.getRestaurants();
+    const restaurantList: IRestaurantInput[] =
+      this.getRestaurants() === defaultDummyRestaurantsData
+        ? []
+        : this.getRestaurants();
+
     restaurantList.push(restaurantInput);
 
-    localStorage.setItem('restaurantList', JSON.stringify(restaurantList));
+    setLocalStorageItem('restaurantList', restaurantList);
 
     this.setState({ restaurantList });
   }
@@ -125,7 +134,9 @@ class App extends Component<IComponentPropState> {
   }
 
   getRestaurants(): IRestaurantInput[] {
-    return JSON.parse(localStorage.getItem('restaurantList') || '[]');
+    return (
+      getLocalStorageItems('restaurantList') || defaultDummyRestaurantsData
+    );
   }
 }
 
